@@ -24,7 +24,7 @@ ext {
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
   log4j2Version="2.12.0"
-  junitJupiterVersion = '5.4.2'
+  junitJupiterVersion = '5.5.0'
   jGroupsVersion = '4.0.16.Final'
 }
 
@@ -73,20 +73,20 @@ configurations.all {
 dependencies {
   compile  ("com.adaptris:interlok-core:$interlokCoreVersion") { changing= true}
   compile  ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
-  
+
   compile ("org.jgroups:jgroups:$jGroupsVersion")
-  
+
   annotationProcessor ("com.adaptris:interlok-core-apt:$interlokCoreVersion") {changing= true}
 
-  testCompile  ('org.junit.jupiter:junit-jupiter-api:5.4.2')
-  testCompile  ('org.junit.jupiter:junit-jupiter:5.4.2')
-  
+  testCompile  ("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
+  testCompile  ("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
+
   testCompile  ("com.adaptris:interlok-stubs:$interlokCoreVersion") { changing= true}
-  
+
   testCompile  ("org.apache.logging.log4j:log4j-core:$log4j2Version")
   testCompile  ("org.apache.logging.log4j:log4j-1.2-api:$log4j2Version")
   testCompile  ("org.apache.logging.log4j:log4j-api:$log4j2Version")
-  
+
   testCompile  ("org.mockito:mockito-all:1.10.19")
 
   javadoc("com.adaptris:interlok-core-apt:$interlokCoreVersion") { changing= true}
