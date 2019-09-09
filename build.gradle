@@ -24,7 +24,7 @@ ext {
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
   log4j2Version="2.12.1"
-  junitJupiterVersion = '5.5.1'
+  junitJupiterVersion = '5.5.2'
   jGroupsVersion = '4.1.4.Final'
 }
 
