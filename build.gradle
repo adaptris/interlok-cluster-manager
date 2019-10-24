@@ -189,8 +189,14 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
   from javadoc.destinationDir
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.extensions.delombokTask
+}
+
 artifacts {
   archives javadocJar
+  archives sourcesJar
 }
 
 publishing {
@@ -199,6 +205,7 @@ publishing {
       from components.java
 
       artifact javadocJar { classifier "javadoc" }
+      artifact sourcesJar { classifier "sources" }
 
       pom.withXml {
         asNode().appendNode("name", componentName)
