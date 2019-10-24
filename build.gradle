@@ -226,10 +226,6 @@ test {
   useJUnitPlatform()
 }
 
-jacoco {
-  toolVersion="0.8.3"
-}
-
 jacocoTestReport {
     reports {
         xml.enabled true
