@@ -28,3 +28,4 @@ bin
 gradle.properties
 .vscode
 activemq-data
+*/src/main/generated
