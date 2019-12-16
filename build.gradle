@@ -26,7 +26,7 @@ ext {
   componentName='Interlok/Cluster Management'
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
-  log4j2Version="2.12.1"
+  log4j2Version="2.13.0"
   junitJupiterVersion = '5.5.2'
   jGroupsVersion = '4.1.8.Final'
 }
