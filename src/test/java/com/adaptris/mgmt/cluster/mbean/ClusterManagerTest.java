@@ -20,7 +20,7 @@ public class ClusterManagerTest {
   
   @Test
   public void testClusterManagerNewInstance() throws Exception {
-    clusterManager.clusterInstancePinged(new ClusterInstance(UUID.randomUUID(), "myJmxAddress"));
+    clusterManager.clusterInstancePinged(new ClusterInstance(UUID.randomUUID(), "MyAdapterId", "myJmxAddress"));
     
     assertTrue(clusterManager.getKnownClusterInstances().contains("myJmxAddress"));
   }
@@ -28,8 +28,8 @@ public class ClusterManagerTest {
   @Test
   public void testClusterManagerNewInstanceNotReAdded() throws Exception {
     UUID randomUUID = UUID.randomUUID();
-    clusterManager.clusterInstancePinged(new ClusterInstance(randomUUID, "myJmxAddress"));
-    clusterManager.clusterInstancePinged(new ClusterInstance(randomUUID, "myJmxAddress"));
+    clusterManager.clusterInstancePinged(new ClusterInstance(randomUUID, "MyAdapterId", "myJmxAddress"));
+    clusterManager.clusterInstancePinged(new ClusterInstance(randomUUID, "MyAdapterId", "myJmxAddress"));
     
     System.out.println(clusterManager.getKnownClusterInstances());
     
@@ -39,8 +39,9 @@ public class ClusterManagerTest {
   
   @Test
   public void testClusterManagerMultipleNewInstance() throws Exception {
-    clusterManager.clusterInstancePinged(new ClusterInstance(UUID.randomUUID(), "myJmxAddress"));
-    clusterManager.clusterInstancePinged(new ClusterInstance(UUID.randomUUID(), "myJmxAddress2"));
+    clusterManager.setDebug(true);
+    clusterManager.clusterInstancePinged(new ClusterInstance(UUID.randomUUID(), "MyAdapterId", "myJmxAddress"));
+    clusterManager.clusterInstancePinged(new ClusterInstance(UUID.randomUUID(), "MyAdapterId", "myJmxAddress2"));
     
     System.out.println(clusterManager.getKnownClusterInstances());
     

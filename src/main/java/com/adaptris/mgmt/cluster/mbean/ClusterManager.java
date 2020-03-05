@@ -22,6 +22,9 @@ public class ClusterManager implements ClusterManagerMBean, ClusterInstanceEvent
   @Getter
   @Setter
   private ExpiringMapCache clusterInstances;
+  @Getter
+  @Setter
+  private boolean debug;
   
   // use a PAssiveExpiryMap
   public ClusterManager() throws CoreException {
@@ -61,19 +64,22 @@ public class ClusterManager implements ClusterManagerMBean, ClusterInstanceEvent
     synchronized(this.getClusterInstances()) {
       if(this.getClusterInstances().get(clusterInstance.getClusterUuid().toString()) == null) {
         this.getClusterInstances().put(clusterInstance.getClusterUuid().toString(), clusterInstance);
-        log.debug("Found new Cluster Instance: {}", clusterInstance);
+        if(this.isDebug())
+          log.debug("Found new Cluster Instance: {}", clusterInstance);
       } else {
         // refresh the instance on the cache, so it does not expire
         this.getClusterInstances().remove(clusterInstance.getClusterUuid().toString());
         this.getClusterInstances().put(clusterInstance.getClusterUuid().toString(), clusterInstance);
-        log.trace("Refreshed Cluster Instance {}", clusterInstance);
+        if(this.isDebug())
+          log.trace("Refreshed Cluster Instance {}", clusterInstance);
       }
     }
   }
 
   @Override
   public void clusterInstancePinged(ClusterInstance clusterInstance) {
-    log.trace("Cluster instance pinged: {}", clusterInstance);
+    if(this.isDebug())
+      log.trace("Cluster instance pinged: {}", clusterInstance);
     try {
       this.addClusterInstance(clusterInstance);
     } catch (CoreException ex) {

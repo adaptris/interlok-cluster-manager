@@ -7,9 +7,11 @@ import com.adaptris.mgmt.cluster.ClusterInstance;
 
 public class PacketHelper {
     
-  public static final int STANDARD_PACKET_SIZE = 152;
+  public static final int STANDARD_PACKET_SIZE = 280;
   
   private static final int MAX_JMX_LENGTH = 128;
+  
+  private static final int MAX_ADAPTER_ID_LENGTH = 128;
   
   private static final String UTF8_ENCODING = "UTF-8";
     
@@ -19,8 +21,11 @@ public class PacketHelper {
     
     long bigBits = byteBuffer.getLong();
     long littleBits = byteBuffer.getLong();
+    byte[] adapterId = new byte[MAX_ADAPTER_ID_LENGTH];
     byte[] hostArray = new byte[MAX_JMX_LENGTH];
+    byteBuffer.get(adapterId);
     byteBuffer.get(hostArray);
+    ping.setUniqueId(new String(adapterId, UTF8_ENCODING).trim());
     ping.setJmxAddress(new String(hostArray, UTF8_ENCODING).trim());
     ping.setClusterUuid(new UUID(bigBits, littleBits));
     
@@ -32,6 +37,7 @@ public class PacketHelper {
     
     byteBuffer.putLong(ping.getClusterUuid().getMostSignificantBits());
     byteBuffer.putLong(ping.getClusterUuid().getLeastSignificantBits());
+    byteBuffer.put(padStringByteArray(ping.getUniqueId(), MAX_ADAPTER_ID_LENGTH));
     byteBuffer.put(padStringByteArray(ping.getJmxAddress(), MAX_JMX_LENGTH));
     
     return byteBuffer.array();

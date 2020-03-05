@@ -33,7 +33,7 @@ public class JGroupsNetworkPingSenderTest {
   
   @Test
   public void testNotConnected() throws Exception {
-    pingSender.sendData("someHost", 999, new ClusterInstance(UUID.randomUUID(), "myJmxAddress"));
+    pingSender.sendData("someHost", 999, new ClusterInstance(UUID.randomUUID(), "MyAdapterId", "myJmxAddress"));
     
     verify(mockJChannel, times(0)).send(any(Message.class));
   }
@@ -42,7 +42,7 @@ public class JGroupsNetworkPingSenderTest {
   public void testIsConnected() throws Exception {
     when(mockJChannel.isConnected())
         .thenReturn(true);
-    pingSender.sendData("someHost", 999, new ClusterInstance(UUID.randomUUID(), "myJmxAddress"));
+    pingSender.sendData("someHost", 999, new ClusterInstance(UUID.randomUUID(), "MyAdapterId", "myJmxAddress"));
     
     verify(mockJChannel, times(1)).send(any(Message.class));
   }

@@ -6,6 +6,8 @@ import java.util.Properties;
 
 import javax.management.ObjectName;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.adaptris.core.CoreException;
 import com.adaptris.core.management.ManagementComponent;
 import com.adaptris.core.util.JmxHelper;
@@ -25,6 +27,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ClusterManagerComponent implements ManagementComponent {
   
   private static final String CLUSTER_NAME_KEY = "clusterName";
+  
+  private static final String CLUSTER_DEBUG_KEY = "clusterDebug";
   
   private static final String CLUSTER_MANAGER_OBJECT_NAME = "com.adaptris:type=ClusterManager,id=ClusterManager";
   
@@ -61,6 +65,7 @@ public class ClusterManagerComponent implements ManagementComponent {
     if(this.getBroadcaster() == null) {
       this.setBroadcaster(new JGroupsBroadcaster());
       this.getBroadcaster().setJGroupsClusterName(this.getClusterName());
+      this.getBroadcaster().setDebug(new Boolean(StringUtils.defaultIfBlank(config.getProperty(CLUSTER_DEBUG_KEY), "false")));
     }
       
     if(this.getListener() == null) {
@@ -68,8 +73,10 @@ public class ClusterManagerComponent implements ManagementComponent {
       this.getListener().setJGroupsClusterName(this.getClusterName());
     }
       
-    if(this.getClusterManager() == null)
+    if(this.getClusterManager() == null) {
       this.setClusterManager(new ClusterManager());
+      this.getClusterManager().setDebug(new Boolean(StringUtils.defaultIfBlank(config.getProperty(CLUSTER_DEBUG_KEY), "false"))); 
+    }
   }
 
   @Override
