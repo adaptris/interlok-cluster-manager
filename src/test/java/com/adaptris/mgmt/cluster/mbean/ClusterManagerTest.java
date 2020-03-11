@@ -22,7 +22,7 @@ public class ClusterManagerTest {
   public void testClusterManagerNewInstance() throws Exception {
     clusterManager.clusterInstancePinged(new ClusterInstance(UUID.randomUUID(), "MyAdapterId", "myJmxAddress"));
     
-    assertTrue(clusterManager.getKnownClusterInstances().contains("myJmxAddress"));
+    assertTrue(clusterManager.getKnownClusterInstancesAsString().contains("myJmxAddress"));
   }
   
   @Test
@@ -31,10 +31,10 @@ public class ClusterManagerTest {
     clusterManager.clusterInstancePinged(new ClusterInstance(randomUUID, "MyAdapterId", "myJmxAddress"));
     clusterManager.clusterInstancePinged(new ClusterInstance(randomUUID, "MyAdapterId", "myJmxAddress"));
     
-    System.out.println(clusterManager.getKnownClusterInstances());
+    System.out.println(clusterManager.getKnownClusterInstancesAsString());
     
-    assertTrue(clusterManager.getKnownClusterInstances().indexOf("myJmxAddress") >= 0);
-    assertTrue(clusterManager.getKnownClusterInstances().indexOf(",") == -1);
+    assertTrue(clusterManager.getKnownClusterInstancesAsString().indexOf("myJmxAddress") >= 0);
+    assertTrue(clusterManager.getKnownClusterInstancesAsString().indexOf(",") == -1);
   }
   
   @Test
@@ -43,11 +43,11 @@ public class ClusterManagerTest {
     clusterManager.clusterInstancePinged(new ClusterInstance(UUID.randomUUID(), "MyAdapterId", "myJmxAddress"));
     clusterManager.clusterInstancePinged(new ClusterInstance(UUID.randomUUID(), "MyAdapterId", "myJmxAddress2"));
     
-    System.out.println(clusterManager.getKnownClusterInstances());
+    System.out.println(clusterManager.getKnownClusterInstancesAsString());
     
-    assertTrue(clusterManager.getKnownClusterInstances().indexOf("myJmxAddress") >= 0);
-    assertTrue(clusterManager.getKnownClusterInstances().indexOf(",") > 0);
-    assertTrue(clusterManager.getKnownClusterInstances().indexOf("myJmxAddress2") >= 0);
+    assertTrue(clusterManager.getKnownClusterInstancesAsString().indexOf("myJmxAddress") >= 0);
+    assertTrue(clusterManager.getKnownClusterInstancesAsString().indexOf(",") > 0);
+    assertTrue(clusterManager.getKnownClusterInstancesAsString().indexOf("myJmxAddress2") >= 0);
   }
 
 }

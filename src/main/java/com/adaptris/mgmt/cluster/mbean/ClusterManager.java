@@ -39,7 +39,7 @@ public class ClusterManager implements ClusterManagerMBean, ClusterInstanceEvent
   }
   
   @Override
-  public String getKnownClusterInstances() {
+  public String getKnownClusterInstancesAsString() {
     try {
       synchronized(this.getClusterInstances()) {
         return this.getClusterInstances().getKeys()
