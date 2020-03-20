@@ -1,5 +1,6 @@
 package com.adaptris.mgmt.cluster.jgroups;
 
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -7,8 +8,10 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
+import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.adaptris.core.CoreException;
@@ -23,6 +26,12 @@ import lombok.extern.slf4j.Slf4j;
 public class JGroupsBroadcaster implements Broadcaster {
     
   private static final int DEFAULT_SEND_DELAY_SECONDS = 10;
+  
+  private static final String ADAPTER_REGISTRY = "com.adaptris:type=Registry,id=AdapterRegistry";
+  
+  private static final String ADAPTER_REGISTRY_ADAPTERS = "Adapters";
+  
+  private static final String ADAPTER_UNIQUE_ID = "UniqueId";
   
   private static final String CONNECTOR_SERVER = "com.adaptris:type=JmxConnectorServer";
   
@@ -42,6 +51,12 @@ public class JGroupsBroadcaster implements Broadcaster {
   @Getter
   @Setter
   private String jGroupsClusterName;
+  @Getter
+  @Setter
+  private MBeanServer mbeanServer;
+  @Getter
+  @Setter
+  private boolean debug;
 
   public JGroupsBroadcaster() {
     this.setSendDelaySeconds(DEFAULT_SEND_DELAY_SECONDS);
@@ -92,16 +107,35 @@ public class JGroupsBroadcaster implements Broadcaster {
   }
 
   private ClusterInstance generateMyPingData() throws Exception {
-    String myJmxAddress = JmxHelper.findMBeanServer().getAttribute(new ObjectName(CONNECTOR_SERVER), CONNECTOR_SERVER_ADDRESS).toString();
+    MBeanServer mBeanServer = mbeanServer();
+    
+    @SuppressWarnings("unchecked")
+    Set<ObjectName> adapterIdsSet = (Set<ObjectName>) mBeanServer.getAttribute(new ObjectName(ADAPTER_REGISTRY), ADAPTER_REGISTRY_ADAPTERS);
+    final StringBuffer adapterIdBuffer = new StringBuffer();
+    
+    adapterIdsSet.forEach(objectName -> {
+      adapterIdBuffer.append(",");
+      try {
+        adapterIdBuffer.append((String) mBeanServer.getAttribute(objectName, ADAPTER_UNIQUE_ID));
+      } catch (Exception e) {
+        log.warn("Unable to determine Adapter ID", e);
+      }
+    });
+
+    String myJmxAddress = mBeanServer.getAttribute(new ObjectName(CONNECTOR_SERVER), CONNECTOR_SERVER_ADDRESS).toString();
     if(StringUtils.isEmpty(myJmxAddress)) {
       log.warn("Attempt to connect to the JMXConnector has failed.  Perhaps it has not yet started.  Continuing and will retry.");
       return null;
     }
     
-    ClusterInstance clusterInstance = new ClusterInstance(UUID.randomUUID(), myJmxAddress);
-    log.debug("Broadcasting my cluster instance as: {}", clusterInstance);
+    ClusterInstance clusterInstance = new ClusterInstance(UUID.randomUUID(), adapterIdBuffer.toString().substring(1), myJmxAddress);
+    if(this.isDebug())
+      log.debug("Broadcasting my cluster instance as: {}", clusterInstance);
     return clusterInstance;
   }
 
+  protected MBeanServer mbeanServer() throws Exception {
+    return ObjectUtils.defaultIfNull(this.getMbeanServer(), JmxHelper.findMBeanServer());
+  }
   
 }

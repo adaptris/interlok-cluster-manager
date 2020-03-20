@@ -42,6 +42,7 @@ public class JGroupsListenerTest {
         
     clusterInstance = new ClusterInstance();
     clusterInstance.setClusterUuid(UUID.randomUUID());
+    clusterInstance.setUniqueId("MyUniqueId");
     clusterInstance.setJmxAddress("myJmxAddress");
     
   }

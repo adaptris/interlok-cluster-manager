@@ -10,5 +10,7 @@ public interface Broadcaster extends ComponentLifecycle {
    public void setSendDelaySeconds(int parseInt);
    
    public void setJGroupsClusterName(String clusterName);
+   
+   public void setDebug(boolean debug);
   
 }
