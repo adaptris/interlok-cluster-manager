@@ -28,7 +28,7 @@ ext {
   organizationUrl = "http://interlok.adaptris.net"
   log4j2Version="2.13.1"
   junitJupiterVersion = '5.6.1'
-  jGroupsVersion = '4.2.1.Final'
+  jGroupsVersion = '4.2.2.Final'
 }
 
 if (JavaVersion.current().isJava8Compatible()) {
