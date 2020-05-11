@@ -4,8 +4,8 @@ plugins {
   id 'maven'
   id 'maven-publish'
   id  "jacoco"
-  id 'com.github.spotbugs' version '3.0.0'
-  id "io.freefair.lombok" version "4.1.6"
+  id 'com.github.spotbugs' version '4.0.5'
+  id "io.freefair.lombok" version "5.0.0"
 }
 
 ext {
@@ -26,9 +26,9 @@ ext {
   componentName='Interlok/Cluster Management'
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
-  log4j2Version="2.13.0"
-  junitJupiterVersion = '5.6.0'
-  jGroupsVersion = '4.1.9.Final'
+  log4j2Version="2.13.2"
+  junitJupiterVersion = '5.6.2'
+  jGroupsVersion = '4.2.3.Final'
 }
 
 if (JavaVersion.current().isJava8Compatible()) {
@@ -96,6 +96,11 @@ configurations {
   all*.exclude group: 'net.sf.saxon', module: 'saxon'
   all*.exclude group: 'org.codehaus.woodstox'
   all*.exclude group: 'org.eclipse.jetty.orbit', module: 'javax.mail.glassfish'
+  // INTERLOK-3197 exclude old javax.mail
+  all*.exclude group: 'com.sun.mail', module: 'javax.mail'
+  all*.exclude group: 'javax.validation', module: 'validation-api'
+  all*.exclude group: 'javax.activation', module: 'activation'
+  all*.exclude group: 'javax.activation', module: 'javax.activation-api'
 }
 
 configurations.all {
@@ -280,25 +285,26 @@ publishing {
   }
 }
 
-spotbugs {
+spotbugsMain {
+  effort = "max"
+  reportLevel = "high"
   // showProgress = "true"
   effort = "max"
   // Ignore failures?
   // ignoreFailures = false
-
-  // We only care about "high priority" issues...
-  reportLevel = "high"
+  reports {
+    xml {
+      enabled = false
+    }
+    html {
+      enabled = true
+    }
+  }
 }
 
 // disable spotbugsTests which checks our test code..
 spotbugsTest.enabled = false
 
-tasks.withType(com.github.spotbugs.SpotBugsTask) {
-  reports {
-    xml.enabled = false
-    html.enabled = true
-  }
-}
 
 delombok {
   target = delombokTargetDir
