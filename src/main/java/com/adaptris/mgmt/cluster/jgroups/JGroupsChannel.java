@@ -94,6 +94,7 @@ public class JGroupsChannel {
   }
   
   private InputStream loadJGroupsConfiguration(String configName) {
+    log.debug("Loading JGroups configuartion file named '{}'", configName);
     return this.getClass().getClassLoader().getResourceAsStream(configName);
   }
   
