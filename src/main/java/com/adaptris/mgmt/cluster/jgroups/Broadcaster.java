@@ -12,5 +12,7 @@ public interface Broadcaster extends ComponentLifecycle {
    public void setJGroupsClusterName(String clusterName);
    
    public void setDebug(boolean debug);
+   
+   public void setJGroupsConfiguration(String resource);
   
 }

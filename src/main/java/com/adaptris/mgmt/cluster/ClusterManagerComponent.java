@@ -30,6 +30,8 @@ public class ClusterManagerComponent implements ManagementComponent {
   
   private static final String CLUSTER_DEBUG_KEY = "clusterDebug";
   
+  private static final String CLUSTER_CONFIG_KEY = "clusterConfig";
+  
   private static final String CLUSTER_MANAGER_OBJECT_NAME = "com.adaptris:type=ClusterManager,id=ClusterManager";
   
   @Getter
@@ -66,11 +68,13 @@ public class ClusterManagerComponent implements ManagementComponent {
       this.setBroadcaster(new JGroupsBroadcaster());
       this.getBroadcaster().setJGroupsClusterName(this.getClusterName());
       this.getBroadcaster().setDebug(new Boolean(StringUtils.defaultIfBlank(config.getProperty(CLUSTER_DEBUG_KEY), "false")));
+      this.getBroadcaster().setJGroupsConfiguration(config.getProperty(CLUSTER_CONFIG_KEY));
     }
       
     if(this.getListener() == null) {
       this.setListener(new JGroupsListener());
       this.getListener().setJGroupsClusterName(this.getClusterName());
+      this.getListener().setJGroupsConfiguration(config.getProperty(CLUSTER_CONFIG_KEY));
     }
       
     if(this.getClusterManager() == null) {
