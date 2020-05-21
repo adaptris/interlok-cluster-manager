@@ -57,6 +57,9 @@ public class JGroupsBroadcaster implements Broadcaster {
   @Getter
   @Setter
   private boolean debug;
+  @Getter
+  @Setter
+  private String jGroupsConfiguration;
 
   public JGroupsBroadcaster() {
     this.setSendDelaySeconds(DEFAULT_SEND_DELAY_SECONDS);
@@ -65,7 +68,7 @@ public class JGroupsBroadcaster implements Broadcaster {
   
   @Override
   public void start() throws CoreException {
-    JGroupsChannel jGroupsChannel = JGroupsChannel.getInstance();
+    JGroupsChannel jGroupsChannel = JGroupsChannel.getInstance(this.getJGroupsConfiguration());
     jGroupsChannel.setClusterName(this.getJGroupsClusterName());
     try {
       jGroupsChannel.start();

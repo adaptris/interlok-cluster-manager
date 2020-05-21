@@ -17,7 +17,7 @@ public class JGroupsListener extends AbstractListener implements Receiver {
 
   @Override
   public void start() throws CoreException {
-    JGroupsChannel jGroupsChannel = JGroupsChannel.getInstance();
+    JGroupsChannel jGroupsChannel = JGroupsChannel.getInstance(this.getJGroupsConfiguration());
     jGroupsChannel.setClusterName(this.getJGroupsClusterName());
     
     try {
