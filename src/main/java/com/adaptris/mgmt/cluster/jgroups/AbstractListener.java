@@ -14,7 +14,11 @@ public abstract class AbstractListener implements ComponentLifecycle{
   @Getter
   @Setter
   private String jGroupsClusterName;
-    
+  
+  @Getter
+  @Setter
+  private String jGroupsConfiguration;
+  
   @Getter
   private List<ClusterInstanceEventListener> listeners;
   
@@ -34,4 +38,5 @@ public abstract class AbstractListener implements ComponentLifecycle{
     for(ClusterInstanceEventListener listener : this.getListeners())
       listener.clusterInstancePinged(pingData);
   }
+  
 }

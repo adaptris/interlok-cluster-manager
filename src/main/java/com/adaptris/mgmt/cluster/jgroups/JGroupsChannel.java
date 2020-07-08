@@ -1,6 +1,7 @@
 package com.adaptris.mgmt.cluster.jgroups;
 
 import java.io.InputStream;
+import java.util.Optional;
 
 import org.jgroups.JChannel;
 
@@ -26,13 +27,23 @@ public class JGroupsChannel {
   @Setter
   private String clusterName;
   
+  @Getter
+  @Setter
+  private String configResource;
+  
   private JGroupsChannel() {
     // Singleton.
   }
   
   public static JGroupsChannel getInstance() {
+    return getInstance(null);
+  }
+  
+  public static JGroupsChannel getInstance(String configResource) {
     if(INSTANCE == null) {
-      INSTANCE = new JGroupsChannel();
+        INSTANCE = new JGroupsChannel();
+        if(configResource != null)
+          INSTANCE.setConfigResource(configResource);
     }
     
     return INSTANCE;
@@ -69,7 +80,7 @@ public class JGroupsChannel {
    * </p>
    * <p>
    * When JGroups is initialised the configuration file is taken from the META-INF directory of 
-   * this jar file.
+   * this jar file, or a configured override..
    * </p>
    */
   public void setJGroupsChannel(JChannel jChannel) {
@@ -77,10 +88,14 @@ public class JGroupsChannel {
   }
 
   private InputStream loadJGroupsConfiguration() {
-    InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(BUNDLED_JGROUPS_CONFIG_FILE_NAME);
-    if(resourceAsStream != null)
-      return resourceAsStream;
-    return null;
+    return Optional.ofNullable(this.getConfigResource())
+        .map(configResource -> this.loadJGroupsConfiguration(configResource))
+        .orElse(this.loadJGroupsConfiguration(BUNDLED_JGROUPS_CONFIG_FILE_NAME));
+  }
+  
+  private InputStream loadJGroupsConfiguration(String configName) {
+    log.debug("Loading JGroups configuartion file named '{}'", configName);
+    return this.getClass().getClassLoader().getResourceAsStream(configName);
   }
   
   public void start() throws Exception {
@@ -99,4 +114,7 @@ public class JGroupsChannel {
     }
   }
 
+  static void clear() {
+    INSTANCE = null;
+  }
 }

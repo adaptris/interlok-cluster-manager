@@ -85,6 +85,7 @@ public class JGroupsBroadcasterTest {
     broadcaster.setNetworkPingSender(mockNetworkPingSender);
     broadcaster.setJGroupsClusterName(CLUSTER_NAME);
     broadcaster.setMbeanServer(mockMBeanServer);
+    broadcaster.setJGroupsConfiguration("cluster-manager.xml");
     
     mockClusterInstance = new ClusterInstance();
     mockClusterInstance.setClusterUuid(UUID.randomUUID());
