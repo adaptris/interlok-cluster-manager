@@ -4,9 +4,9 @@ plugins {
   id 'maven'
   id 'maven-publish'
   id  "jacoco"
-  id 'com.github.spotbugs' version '4.5.0'
-  id "io.freefair.lombok" version "5.1.1"
-  id 'org.owasp.dependencycheck' version '5.3.2.1'
+  id 'com.github.spotbugs' version '4.5.1'
+  id "io.freefair.lombok" version "5.3.0"
+  id 'org.owasp.dependencycheck' version '6.0.3'
 }
 
 ext {
@@ -27,7 +27,7 @@ ext {
   componentName='Interlok/Cluster Management'
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
-  junitJupiterVersion = '5.6.2'
+  junitJupiterVersion = '5.7.0'
   jGroupsVersion = '4.2.4.Final'
   slf4jVersion = "1.7.30"
 }
@@ -129,8 +129,8 @@ dependencies {
   }
 
 
-  testCompile ("org.mockito:mockito-core:3.5.9")
-  testCompile ("org.mockito:mockito-inline:3.5.9")
+  testCompile ("org.mockito:mockito-core:3.6.0")
+  testCompile ("org.mockito:mockito-inline:3.6.0")
 
   javadoc("com.adaptris:interlok-core-apt:$interlokCoreVersion") { changing= true}
 
