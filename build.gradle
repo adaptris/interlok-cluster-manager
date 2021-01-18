@@ -272,11 +272,12 @@ publishing {
       pom.withXml {
         asNode().appendNode("name", componentName)
         asNode().appendNode("description", "Management component for reporting on cluster instances.")
-        asNode().appendNode("url", "http://interlok.adaptris.net/interlok-docs/advanced-clustering.html")
+        asNode().appendNode("url", "https://interlok.adaptris.net/interlok-docs/#/pages/advanced/advanced-cluster")
         def properties = asNode().appendNode("properties")
         properties.appendNode("target", "3.9.0+")
         properties.appendNode("license", "false")
         properties.appendNode("tags", "cluster,management")
+        properties.appendNode("repository", "https://github.com/adaptris/interlok-cluster-manager")
       }
     }
   }
