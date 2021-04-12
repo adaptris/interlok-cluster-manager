@@ -29,3 +29,4 @@ gradle.properties
 .vscode
 activemq-data
 */src/main/generated
+src/main/generated
