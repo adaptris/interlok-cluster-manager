@@ -32,7 +32,7 @@ ext {
   junitJupiterVersion = '5.7.2'
   jGroupsVersion = '4.2.4.Final'
   slf4jVersion = '1.7.30'
-  mockitoVersion = '3.10.0'
+  mockitoVersion = '3.11.0'
 }
 
 if (JavaVersion.current().isJava8Compatible()) {
