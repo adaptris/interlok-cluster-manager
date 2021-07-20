@@ -29,7 +29,7 @@ ext {
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
   junitJupiterVersion = '5.7.2'
-  jGroupsVersion = '4.2.4.Final'
+  jGroupsVersion = '5.1.8.Final'
   slf4jVersion = '1.7.32'
   mockitoVersion = '3.11.2'
 }
