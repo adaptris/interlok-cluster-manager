@@ -3,14 +3,14 @@ plugins {
   id 'java-library'
   id 'maven-publish'
   id 'jacoco'
-  id 'com.github.spotbugs' version '4.7.2'
-  id "io.freefair.lombok" version "5.3.3.3"
-  id 'org.owasp.dependencycheck' version '6.2.2'
+  id 'com.github.spotbugs' version '4.7.9'
+  id "io.freefair.lombok" version "6.2.0"
+  id 'org.owasp.dependencycheck' version '6.5.0.1'
 }
 
 ext {
-  interlokCoreVersion = project.findProperty('interlokCoreVersion') ?: '4.2-SNAPSHOT'
-  releaseVersion = project.findProperty('releaseVersion') ?: '4.2-SNAPSHOT'
+  interlokCoreVersion = project.findProperty('interlokCoreVersion') ?: '4.3-SNAPSHOT'
+  releaseVersion = project.findProperty('releaseVersion') ?: '4.3-SNAPSHOT'
   nexusBaseUrl = project.findProperty('nexusBaseUrl') ?: 'https://nexus.adaptris.net/nexus'
   mavenPublishUrl = project.findProperty('mavenPublishUrl') ?: nexusBaseUrl + '/content/repositories/snapshots'
   javadocsBaseUrl = nexusBaseUrl + "/content/sites/javadocs/com/adaptris"
@@ -28,10 +28,10 @@ ext {
   componentDesc="Management component for reporting on cluster instances."
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
-  junitJupiterVersion = '5.7.2'
+  junitJupiterVersion = '5.8.1'
   jGroupsVersion = '4.2.4.Final'
   slf4jVersion = '1.7.32'
-  mockitoVersion = '3.11.2'
+  mockitoVersion = '4.0.0'
 }
 
 ext.gitBranchNameOrTimestamp = { branchName ->
@@ -71,7 +71,7 @@ version = releaseVersion
 def versionDir = "$buildDir/version"
 
 // don't generate the lombok config repeatedly
-generateLombokConfig.enabled = false
+lombok.disableConfig = true
 
 // Disable gradle module generation since we probably don't want
 // xxx.module files in your repository.
