@@ -31,7 +31,7 @@ ext {
   junitJupiterVersion = '5.8.2'
   jGroupsVersion = '4.2.4.Final'
   slf4jVersion = '1.7.35'
-  mockitoVersion = '4.3.0'
+  mockitoVersion = '4.3.1'
 }
 
 ext.gitBranchNameOrTimestamp = { branchName ->
