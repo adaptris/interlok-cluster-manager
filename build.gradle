@@ -3,14 +3,14 @@ plugins {
   id 'java-library'
   id 'maven-publish'
   id 'jacoco'
-  id 'com.github.spotbugs' version '4.7.9'
-  id "io.freefair.lombok" version "6.2.0"
-  id 'org.owasp.dependencycheck' version '6.5.0.1'
+  id 'com.github.spotbugs' version '5.0.5'
+  id "io.freefair.lombok" version "6.3.0"
+  id 'org.owasp.dependencycheck' version '6.5.3'
 }
 
 ext {
-  interlokCoreVersion = project.findProperty('interlokCoreVersion') ?: '4.3-SNAPSHOT'
-  releaseVersion = project.findProperty('releaseVersion') ?: '4.3-SNAPSHOT'
+  interlokCoreVersion = project.findProperty('interlokCoreVersion') ?: '4.4-SNAPSHOT'
+  releaseVersion = project.findProperty('releaseVersion') ?: '4.4-SNAPSHOT'
   nexusBaseUrl = project.findProperty('nexusBaseUrl') ?: 'https://nexus.adaptris.net/nexus'
   mavenPublishUrl = project.findProperty('mavenPublishUrl') ?: nexusBaseUrl + '/content/repositories/snapshots'
   javadocsBaseUrl = nexusBaseUrl + "/content/sites/javadocs/com/adaptris"
@@ -28,10 +28,10 @@ ext {
   componentDesc="Management component for reporting on cluster instances."
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
-  junitJupiterVersion = '5.8.1'
+  junitJupiterVersion = '5.8.2'
   jGroupsVersion = '4.2.4.Final'
-  slf4jVersion = '1.7.32'
-  mockitoVersion = '4.0.0'
+  slf4jVersion = '1.7.35'
+  mockitoVersion = '4.3.1'
 }
 
 ext.gitBranchNameOrTimestamp = { branchName ->
@@ -314,16 +314,13 @@ publishing {
 spotbugsMain {
   effort = "max"
   reportLevel = "high"
-  // showProgress = "true"
-  effort = "max"
-  // Ignore failures?
-  // ignoreFailures = false
   reports {
     xml {
-      enabled = false
+      required.set(false)
     }
     html {
-      enabled = true
+      required.set(true)
+      stylesheet = 'default.xsl'
     }
   }
 }
