@@ -8,8 +8,8 @@ import static org.mockito.Mockito.verify;
 
 import java.util.UUID;
 
+import org.jgroups.BytesMessage;
 import org.jgroups.JChannel;
-import org.jgroups.Message;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,7 +62,7 @@ public class JGroupsListenerTest {
     jGroupsListener.registerListener(mockPingEventListener);
     jGroupsListener.start();
 
-    jGroupsListener.receive(new Message(null, PacketHelper.createDataPacket(clusterInstance)));
+    jGroupsListener.receive(new BytesMessage(null, PacketHelper.createDataPacket(clusterInstance)));
 
     Thread.sleep(3000);
 
@@ -85,10 +85,11 @@ public class JGroupsListenerTest {
     jGroupsListener.registerListener(mockPingEventListener);
     jGroupsListener.start();
 
-    jGroupsListener.receive(new Message(null, new byte[1024]));
+    jGroupsListener.receive(new BytesMessage(null, new byte[1024]));
 
     Thread.sleep(1000);
 
     verify(mockPingEventListener, times(0)).clusterInstancePinged(any(ClusterInstance.class));
   }
+
 }
