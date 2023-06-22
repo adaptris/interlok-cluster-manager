@@ -10,16 +10,16 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class JGroupsListener extends AbstractListener implements Receiver {
-  
+
   public JGroupsListener() {
     super();
   }
 
   @Override
   public void start() throws CoreException {
-    JGroupsChannel jGroupsChannel = JGroupsChannel.getInstance(this.getJGroupsConfiguration());
-    jGroupsChannel.setClusterName(this.getJGroupsClusterName());
-    
+    JGroupsChannel jGroupsChannel = JGroupsChannel.getInstance(getJGroupsConfiguration());
+    jGroupsChannel.setClusterName(getJGroupsClusterName());
+
     try {
       jGroupsChannel.getJGroupsChannel().setReceiver(this);
       jGroupsChannel.start();
@@ -27,27 +27,26 @@ public class JGroupsListener extends AbstractListener implements Receiver {
       throw new CoreException(ex);
     }
   }
-  
+
   @Override
-  public void receive(Message msg) {    
+  public void receive(Message msg) {
     int byteCount = msg.getLength();
-    if(byteCount != PacketHelper.STANDARD_PACKET_SIZE) {
+    if (byteCount != PacketHelper.STANDARD_PACKET_SIZE) {
       log.warn("Incorrect packet size ({}) received on the TCP socket, ignoring this data stream.", byteCount);
     } else {
       try {
-        sendPingEvent(msg.getBuffer());
+        sendPingEvent(msg.getArray());
       } catch (Exception ex) {
         log.error("Unable to handle cluster instance ping.", ex);
       }
     }
   }
 
-
   private void sendPingEvent(byte[] data) throws Exception {
     ClusterInstance pingRecord = PacketHelper.createPingRecord(data);
-    this.notifyListeners(pingRecord);
+    notifyListeners(pingRecord);
   }
-  
+
   @Override
   public void stop() {
     JGroupsChannel.getInstance().stop();
