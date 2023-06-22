@@ -30,118 +30,118 @@ import com.adaptris.core.management.jmx.JmxRemoteComponent;
 import com.adaptris.mgmt.cluster.ClusterInstance;
 
 public class JGroupsBroadcasterTest {
-  
+
   private static final String ADAPTER_REGISTRY = "com.adaptris:type=Registry,id=AdapterRegistry";
-  
+
   private static final String ADAPTER_REGISTRY_ADAPTERS = "Adapters";
-  
+
   private static final String ADAPTER_UNIQUE_ID = "UniqueId";
-  
+
   private static final String CONNECTOR_SERVER = "com.adaptris:type=JmxConnectorServer";
-  
+
   private static final String CONNECTOR_SERVER_ADDRESS = "Address";
 
   private static final String CLUSTER_NAME = "myClusterName";
-  
+
   private static final String HOST = null;
-  
+
   private static final int HOST_PORT = 0;
-  
+
   @Mock
   private NetworkPingSender mockNetworkPingSender;
   @Mock
   private JChannel mockJChannel;
-  @Mock 
+  @Mock
   private MBeanServer mockMBeanServer;
-  
+
+  private AutoCloseable mock;
+
   private JGroupsBroadcaster broadcaster;
   private ClusterInstance mockClusterInstance;
 
   private static JmxRemoteComponent jmxRemoteComponent;
-  
+
   @BeforeAll
   public static void globalSetup() throws Exception {
     Properties properties = new Properties();
     properties.put(Constants.CFG_KEY_JMX_SERVICE_URL_KEY, "service:jmx:jmxmp://localhost:5555");
-    
+
     jmxRemoteComponent = new JmxRemoteComponent();
     jmxRemoteComponent.init(properties);
     jmxRemoteComponent.start();
   }
-  
+
   @AfterAll
   public static void globalTearDown() throws Exception {
     jmxRemoteComponent.stop();
     jmxRemoteComponent.destroy();
   }
-  
+
   @BeforeEach
   public void setUp() throws Exception {
-    MockitoAnnotations.initMocks(this);
-    
+    mock = MockitoAnnotations.openMocks(this);
+
     JGroupsChannel.getInstance().setJGroupsChannel(mockJChannel);
-    
+
     broadcaster = new JGroupsBroadcaster();
     broadcaster.setNetworkPingSender(mockNetworkPingSender);
     broadcaster.setJGroupsClusterName(CLUSTER_NAME);
     broadcaster.setMbeanServer(mockMBeanServer);
     broadcaster.setJGroupsConfiguration("cluster-manager.xml");
-    
+
     mockClusterInstance = new ClusterInstance();
     mockClusterInstance.setClusterUuid(UUID.randomUUID());
     mockClusterInstance.setUniqueId("MyUniqueId");
     mockClusterInstance.setJmxAddress("myJmxAddress");
-    
+
     ObjectName mockAdapterObjectName = new ObjectName("com.adaptris:type=Adapter,id=MyInterlokInstance");
-    
+
     Set<ObjectName> adapterObjectNameSet = new HashSet<>();
     adapterObjectNameSet.add(mockAdapterObjectName);
-    
-    when(mockMBeanServer.getAttribute(new ObjectName(ADAPTER_REGISTRY), ADAPTER_REGISTRY_ADAPTERS))
-        .thenReturn(adapterObjectNameSet);
-    when(mockMBeanServer.getAttribute(mockAdapterObjectName, ADAPTER_UNIQUE_ID))
-        .thenReturn("MyInterlokInstance");
+
+    when(mockMBeanServer.getAttribute(new ObjectName(ADAPTER_REGISTRY), ADAPTER_REGISTRY_ADAPTERS)).thenReturn(adapterObjectNameSet);
+    when(mockMBeanServer.getAttribute(mockAdapterObjectName, ADAPTER_UNIQUE_ID)).thenReturn("MyInterlokInstance");
     when(mockMBeanServer.getAttribute(new ObjectName(CONNECTOR_SERVER), CONNECTOR_SERVER_ADDRESS))
         .thenReturn("service:jmx:jmxmp://localhost:5555");
-    
+
   }
-  
+
   @AfterEach
   public void tearDown() throws Exception {
     broadcaster.stop();
+    mock.close();
   }
 
   @Test
   public void testSendClusterInstancePing() throws Exception {
     broadcaster.setPingData(mockClusterInstance);
     broadcaster.start();
-    
+
     Thread.sleep(1000); // wait for the first ping
-    
+
     verify(mockNetworkPingSender).sendData(HOST, HOST_PORT, mockClusterInstance);
   }
-  
+
   @Test
   public void testSendGeneratedClusterInstancePing() throws Exception {
     broadcaster.setDebug(true);
     broadcaster.start();
-    
+
     Thread.sleep(11000); // first ping will be sent after 10 seconds
-    
+
     verify(mockNetworkPingSender).sendData(eq(HOST), eq(HOST_PORT), any());
   }
-  
+
   @Test
   public void testSendFailsToJoinCluster() throws Exception {
-    doThrow(new CoreException("Expected"))
-        .when(mockJChannel).connect(CLUSTER_NAME);
+    doThrow(new CoreException("Expected")).when(mockJChannel).connect(CLUSTER_NAME);
     broadcaster.setPingData(mockClusterInstance);
     try {
       broadcaster.start();
       fail("Startup should throw a core exception.");
     } catch (CoreException ex) {
-      //expected
+      // expected
     }
   }
-  
+
 }

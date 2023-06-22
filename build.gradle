@@ -9,8 +9,8 @@ plugins {
 }
 
 ext {
-  interlokCoreVersion = project.findProperty('interlokCoreVersion') ?: '4.8-SNAPSHOT'
-  releaseVersion = project.findProperty('releaseVersion') ?: '4.8-SNAPSHOT'
+  interlokCoreVersion = project.findProperty('interlokCoreVersion') ?: '5.0-SNAPSHOT'
+  releaseVersion = project.findProperty('releaseVersion') ?: '5.0-SNAPSHOT'
   nexusBaseUrl = project.findProperty('nexusBaseUrl') ?: 'https://nexus.adaptris.net/nexus'
   mavenPublishUrl = project.findProperty('mavenPublishUrl') ?: nexusBaseUrl + '/content/repositories/snapshots'
   javadocsBaseUrl = nexusBaseUrl + "/content/sites/javadocs/com/adaptris"
@@ -28,10 +28,10 @@ ext {
   componentDesc="Management component for reporting on cluster instances."
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
-  junitJupiterVersion = '5.9.2'
+  junitJupiterVersion = '5.9.3'
   jGroupsVersion = '5.2.14.Final'
-  slf4jVersion = '2.0.3'
-  mockitoVersion = '4.9.0'
+  slf4jVersion = '2.0.7'
+  mockitoVersion = '5.2.0'
 }
 
 ext.gitBranchNameOrTimestamp = { branchName ->
@@ -64,8 +64,8 @@ ext.hasGraphViz = { ->
   return false
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 group   = 'com.adaptris'
 version = releaseVersion
 def versionDir = "$buildDir/version"
@@ -210,7 +210,6 @@ javadoc {
     taglets = ["com.adaptris.taglet.ConfigTaglet", "com.adaptris.taglet.LicenseTaglet"]
     options.addStringOption "tagletpath", configurations.javadoc.asPath
     options.addStringOption('Xdoclint:none', '-quiet')
-    options.addBooleanOption "-no-module-directories", true
     title= componentName
   }
 }
@@ -230,7 +229,6 @@ task umlJavadoc(type: Javadoc) {
     options.linksOffline(interlokCommonJavadocs, offlineJavadocPackageDir.getCanonicalPath() + "/interlok-common-$interlokCoreVersion-javadoc.jar")
     taglets = ["com.adaptris.taglet.ConfigTaglet", "com.adaptris.taglet.LicenseTaglet"]
     options.addStringOption "tagletpath", configurations.javadoc.asPath
-    options.addBooleanOption "-no-module-directories", true
     options.addStringOption('Xdoclint:none', '-quiet')
     options.docletpath = configurations.umlDoclet.files.asType(List)
     options.doclet = "nl.talsmasoftware.umldoclet.UMLDoclet"
