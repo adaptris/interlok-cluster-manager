@@ -1,11 +1,13 @@
 import org.apache.tools.ant.taskdefs.condition.Os
+
 plugins {
-  id 'java-library'
-  id 'maven-publish'
-  id 'jacoco'
-  id 'com.github.spotbugs' version '5.2.1'
+  id "java-library"
+  id "maven-publish"
+  id "jacoco"
+  id "com.github.spotbugs" version "5.2.1"
+  id "org.sonarqube" version "4.4.1.3373"
   id "io.freefair.lombok" version "8.4"
-  id 'org.owasp.dependencycheck' version '8.4.2'
+  id "org.owasp.dependencycheck" version "8.4.2"
 }
 
 ext {
@@ -75,6 +77,14 @@ def versionDir = "$buildDir/version"
 
 // don't generate the lombok config repeatedly
 lombok.disableConfig = true
+
+sonar {
+  properties {
+    property "sonar.projectKey", "adaptris_interlok-cluster-manager"
+    property "sonar.organization", "adaptris-org"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
+}
 
 // Disable gradle module generation since we probably don't want
 // xxx.module files in your repository.
