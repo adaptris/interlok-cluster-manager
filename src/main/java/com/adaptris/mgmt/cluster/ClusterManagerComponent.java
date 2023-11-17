@@ -6,8 +6,6 @@ import java.util.Properties;
 
 import javax.management.ObjectName;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.adaptris.core.CoreException;
 import com.adaptris.core.management.ManagementComponent;
 import com.adaptris.core.util.JmxHelper;
@@ -25,27 +23,27 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ClusterManagerComponent implements ManagementComponent {
-  
+
   private static final String CLUSTER_NAME_KEY = "clusterName";
-  
+
   private static final String CLUSTER_DEBUG_KEY = "clusterDebug";
-  
+
   private static final String CLUSTER_CONFIG_KEY = "clusterConfig";
-  
+
   private static final String CLUSTER_MANAGER_OBJECT_NAME = "com.adaptris:type=ClusterManager,id=ClusterManager";
-  
+
   @Getter
   @Setter
   private ClusterManager clusterManager;
-  
+
   @Getter
   @Setter
   private Broadcaster broadcaster;
-  
+
   @Getter
   @Setter
   private AbstractListener listener;
-  
+
   /**
    * The common name known and configured in the bootstrap.properties by each instance in this cluster.
    */
@@ -55,50 +53,51 @@ public class ClusterManagerComponent implements ManagementComponent {
 
   public ClusterManagerComponent() {
   }
-  
+
   @Override
   public void init(@NonNull Properties config) throws Exception {
     String configuredClusterName = config.getProperty(CLUSTER_NAME_KEY);
-    if(isEmpty(configuredClusterName))
+    if (isEmpty(configuredClusterName)) {
       throw new CoreException("The cluster name has not been set in the bootstrap.properties.\nExample; clusterName = MyCluster");
-    
-    this.setClusterName(configuredClusterName);
-    
-    if(this.getBroadcaster() == null) {
-      this.setBroadcaster(new JGroupsBroadcaster());
-      this.getBroadcaster().setJGroupsClusterName(this.getClusterName());
-      this.getBroadcaster().setDebug(new Boolean(StringUtils.defaultIfBlank(config.getProperty(CLUSTER_DEBUG_KEY), "false")));
-      this.getBroadcaster().setJGroupsConfiguration(config.getProperty(CLUSTER_CONFIG_KEY));
     }
-      
-    if(this.getListener() == null) {
-      this.setListener(new JGroupsListener());
-      this.getListener().setJGroupsClusterName(this.getClusterName());
-      this.getListener().setJGroupsConfiguration(config.getProperty(CLUSTER_CONFIG_KEY));
+
+    setClusterName(configuredClusterName);
+
+    if (getBroadcaster() == null) {
+      setBroadcaster(new JGroupsBroadcaster());
+      getBroadcaster().setJGroupsClusterName(getClusterName());
+      getBroadcaster().setDebug(Boolean.parseBoolean(config.getProperty(CLUSTER_DEBUG_KEY, "false")));
+      getBroadcaster().setJGroupsConfiguration(config.getProperty(CLUSTER_CONFIG_KEY));
     }
-      
-    if(this.getClusterManager() == null) {
-      this.setClusterManager(new ClusterManager());
-      this.getClusterManager().setDebug(new Boolean(StringUtils.defaultIfBlank(config.getProperty(CLUSTER_DEBUG_KEY), "false"))); 
+
+    if (getListener() == null) {
+      setListener(new JGroupsListener());
+      getListener().setJGroupsClusterName(getClusterName());
+      getListener().setJGroupsConfiguration(config.getProperty(CLUSTER_CONFIG_KEY));
+    }
+
+    if (getClusterManager() == null) {
+      setClusterManager(new ClusterManager());
+      getClusterManager().setDebug(Boolean.parseBoolean(config.getProperty(CLUSTER_DEBUG_KEY, "false")));
     }
   }
 
   @Override
   public void start() throws Exception {
-    this.getListener().registerListener(this.getClusterManager());
-    JmxHelper.register(new ObjectName(CLUSTER_MANAGER_OBJECT_NAME), this.getClusterManager());
-    
-    LifecycleHelper.initAndStart(this.getListener());
-    LifecycleHelper.initAndStart(this.getBroadcaster());
-    
+    getListener().registerListener(getClusterManager());
+    JmxHelper.register(new ObjectName(CLUSTER_MANAGER_OBJECT_NAME), getClusterManager());
+
+    LifecycleHelper.initAndStart(getListener());
+    LifecycleHelper.initAndStart(getBroadcaster());
+
     log.debug(this.getClass().getSimpleName() + " Started");
   }
 
   @Override
   public void stop() throws Exception {
-    LifecycleHelper.stopAndClose(this.getListener());
-    LifecycleHelper.stopAndClose(this.getBroadcaster());
-    
+    LifecycleHelper.stopAndClose(getListener());
+    LifecycleHelper.stopAndClose(getBroadcaster());
+
     log.debug(this.getClass().getSimpleName() + " Stopped");
   }
 
@@ -106,5 +105,5 @@ public class ClusterManagerComponent implements ManagementComponent {
   public void destroy() throws Exception {
     log.debug(this.getClass().getSimpleName() + " Destroyed");
   }
-  
+
 }

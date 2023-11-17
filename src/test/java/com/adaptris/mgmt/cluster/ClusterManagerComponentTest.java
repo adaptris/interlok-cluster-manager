@@ -17,46 +17,52 @@ import com.adaptris.mgmt.cluster.jgroups.Broadcaster;
 import com.adaptris.mgmt.cluster.mbean.ClusterManager;
 
 public class ClusterManagerComponentTest {
-  
+
   private static final String CLUSTER_NAME = "MyClusterName";
   private static final String CLUSTER_NAME_KEY = "clusterName";
-  
+
   private ClusterManagerComponent clusterManagerComponent;
-  
-  @Mock private Broadcaster mockBroadcaster;
-  @Mock private AbstractListener mockListener;
-  @Mock private ClusterManager mockClusterManager;
-  
+
+  @Mock
+  private Broadcaster mockBroadcaster;
+  @Mock
+  private AbstractListener mockListener;
+  @Mock
+  private ClusterManager mockClusterManager;
+
+  private AutoCloseable mock;
+
   private Properties bootstrapProperties;
-  
+
   @BeforeEach
   public void setUp() throws Exception {
-    MockitoAnnotations.initMocks(this);
+    mock = MockitoAnnotations.openMocks(this);
     clusterManagerComponent = new ClusterManagerComponent();
-    
+
     bootstrapProperties = new Properties();
     bootstrapProperties.put(CLUSTER_NAME_KEY, CLUSTER_NAME);
   }
-  
+
   @AfterEach
-  public void tearDown() throws Exception {    
+  public void tearDown() throws Exception {
+    mock.close();
   }
-  
+
   /************************************************************************
-   *******************   TESTS   ****************************************** 
+   ******************* TESTS ******************************************
    ************************************************************************/
-  
+
   @Test
   public void testPickupClusterName() throws Exception {
     clusterManagerComponent.init(bootstrapProperties);
     clusterManagerComponent.start();
-    
+
     assertEquals(CLUSTER_NAME, clusterManagerComponent.getClusterName());
-    
+
     clusterManagerComponent.stop();
     clusterManagerComponent.destroy();
   }
-  
+
   @Test
   public void testNoClusterName() throws Exception {
     try {
@@ -66,20 +72,20 @@ public class ClusterManagerComponentTest {
       // expected
     }
   }
-  
+
   @Test
   public void testPreconfiguredNoRecreat() throws Exception {
     clusterManagerComponent.setBroadcaster(mockBroadcaster);
     clusterManagerComponent.setListener(mockListener);
     clusterManagerComponent.setClusterManager(mockClusterManager);
-    
+
     clusterManagerComponent.init(bootstrapProperties);
 
     assertEquals(mockBroadcaster, clusterManagerComponent.getBroadcaster());
     assertEquals(mockListener, clusterManagerComponent.getListener());
     assertEquals(mockClusterManager, clusterManagerComponent.getClusterManager());
   }
-  
+
   @Test
   public void testNullProperties() throws Exception {
     try {
@@ -89,7 +95,5 @@ public class ClusterManagerComponentTest {
       // expected
     }
   }
-  
-  
 
 }
