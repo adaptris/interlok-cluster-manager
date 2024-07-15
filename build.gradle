@@ -138,7 +138,7 @@ dependencies {
   api ("org.jgroups:jgroups:$jGroupsVersion")
 
   annotationProcessor ("com.adaptris:interlok-core-apt:$interlokCoreVersion") {changing= true}
-  umlDoclet("nl.talsmasoftware:umldoclet:2.1.2")
+  umlDoclet("nl.talsmasoftware:umldoclet:2.2.0")
 
   testImplementation  ("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
   testImplementation  ("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
