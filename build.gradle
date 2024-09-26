@@ -4,10 +4,10 @@ plugins {
   id "java-library"
   id "maven-publish"
   id "jacoco"
-  id "com.github.spotbugs" version "6.0.14"
+  id "com.github.spotbugs" version "6.0.21"
   id "org.sonarqube" version "4.4.1.3373"
-  id "io.freefair.lombok" version "8.6"
-  id "org.owasp.dependencycheck" version "9.0.10"
+  id "io.freefair.lombok" version "8.10"
+  id "org.owasp.dependencycheck" version "10.0.3"
 }
 
 ext {
@@ -30,9 +30,9 @@ ext {
   componentDesc="Management component for reporting on cluster instances."
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
-  junitJupiterVersion = '5.10.2'
-  jGroupsVersion = '5.3.6.Final'
-  slf4jVersion = '2.0.13'
+  junitJupiterVersion = '5.11.0'
+  jGroupsVersion = '5.3.11.Final'
+  slf4jVersion = '2.0.16'
   mockitoVersion = '5.2.0'
 }
 
@@ -357,6 +357,11 @@ dependencyCheck  {
   formats = [ "HTML", "JUNIT" ]
   junitFailOnCVSS = 7.0
   failBuildOnCVSS = 7.0
+  nvd {
+    apiKey = System.getenv("NVD_API_KEY")
+    delay=project.findProperty("dependencyCheckNvdDelay")
+    datafeedUrl=project.findProperty("dependencyCheckNvdDatafeedUrl")
+  }
   analyzers {
     assemblyEnabled=false
     knownExploitedURL=project.findProperty('dependencyCheckKnownExploitedURL')
