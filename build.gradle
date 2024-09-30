@@ -28,7 +28,7 @@ ext {
   componentDesc="Management component for reporting on cluster instances."
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
-  junitJupiterVersion = '5.11.0'
+  junitJupiterVersion = '5.11.1'
   jGroupsVersion = '5.3.11.Final'
   slf4jVersion = '2.0.16'
   mockitoVersion = '5.2.0'
