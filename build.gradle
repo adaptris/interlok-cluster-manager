@@ -11,14 +11,16 @@ plugins {
 }
 
 ext {
-  interlokCoreVersion = project.findProperty('interlokCoreVersion') ?: '5.0-SNAPSHOT'
-  releaseVersion = project.findProperty('releaseVersion') ?: '5.0-SNAPSHOT'
+  interlokCatalogVersion = project.findProperty('interlokCatalogVersion') ?: '5.0-SNAPSHOT'
+  interlokCoreVersion = project.findProperty('interlokCoreVersion') ?: interlokCatalogVersion
+  releaseVersion = project.findProperty('releaseVersion') ?: interlokCatalogVersion
   nexusBaseUrl = project.findProperty('nexusBaseUrl') ?: 'https://nexus.adaptris.net/nexus'
   mavenPublishUrl = project.findProperty('mavenPublishUrl') ?: nexusBaseUrl + '/content/repositories/snapshots'
   javadocsBaseUrl = nexusBaseUrl + "/content/sites/javadocs/com/adaptris"
   repoUsername = project.findProperty('repoUsername') ?: 'unknown'
   repoPassword = project.findProperty('repoPassword') ?: 'unknown'
   defaultNexusRepo = project.findProperty('defaultNexusRepo') ?: 'unknown'
+  interlokCatalogPlatform = "com.adaptris:interlok-version-catalog:${interlokCatalogVersion}"
   offlineJavadocPackageDir = new File(project.buildDir, "offline-javadoc-packages")
 
   delombokTargetDir = new File("${project.projectDir}/src/main/generated")
@@ -30,10 +32,6 @@ ext {
   componentDesc="Management component for reporting on cluster instances."
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
-  junitJupiterVersion = '5.11.4'
-  jGroupsVersion = '5.4.6.Final'
-  slf4jVersion = '2.0.20'
-  mockitoVersion = '5.2.0'
 }
 
 ext.gitBranchNameOrTimestamp = { branchName ->
@@ -142,27 +140,38 @@ configurations.all {
 }
 
 dependencies {
-  api  ("com.adaptris:interlok-core:$interlokCoreVersion") { changing= true}
-  api  ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
+  api platform(interlokCatalogPlatform)
+  implementation platform(interlokCatalogPlatform)
+  compileOnly platform(interlokCatalogPlatform)
+  annotationProcessor platform(interlokCatalogPlatform)
+  testImplementation platform(interlokCatalogPlatform)
+  testCompileOnly platform(interlokCatalogPlatform)
+  testRuntimeOnly platform(interlokCatalogPlatform)
 
-  api ("org.jgroups:jgroups:$jGroupsVersion")
+  api ("com.adaptris:interlok-core") { changing= true}
+  api ("com.adaptris:interlok-common") { changing= true}
+  api ("org.jgroups:jgroups")
 
-  annotationProcessor ("com.adaptris:interlok-core-apt:$interlokCoreVersion") {changing= true}
-  umlDoclet("nl.talsmasoftware:umldoclet:2.1.0")
+  annotationProcessor ("com.adaptris:interlok-core-apt") {changing= true}
 
-  testImplementation  ("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
-  testImplementation  ("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
+  testImplementation  ("org.junit.jupiter:junit-jupiter-api")
+  testImplementation  ("org.junit.jupiter:junit-jupiter-engine")
 
-  testImplementation ("org.slf4j:slf4j-simple:$slf4jVersion")
-  testImplementation ("com.adaptris:interlok-stubs:$interlokCoreVersion") { changing= true }
-  testImplementation ("org.mockito:mockito-core:$mockitoVersion")
-  testImplementation ("org.mockito:mockito-inline:$mockitoVersion")
+  testImplementation ("org.slf4j:slf4j-simple")
+  testImplementation ("com.adaptris:interlok-stubs") { changing= true }
+  testImplementation ("org.mockito:mockito-core")
+  testImplementation ("org.mockito:mockito-inline")
+  testRuntimeOnly ("org.junit.platform:junit-platform-launcher")
 
+  umlDoclet platform(interlokCatalogPlatform)
+  umlDoclet("nl.talsmasoftware:umldoclet")
 
-  javadoc("com.adaptris:interlok-core-apt:$interlokCoreVersion") { changing= true}
+  javadoc platform(interlokCatalogPlatform)
+  javadoc("com.adaptris:interlok-core-apt") { changing= true}
 
-  offlineJavadocPackages ("com.adaptris:interlok-core:$interlokCoreVersion:javadoc@jar") { changing= true}
-  offlineJavadocPackages ("com.adaptris:interlok-common:$interlokCoreVersion:javadoc@jar") { changing= true}
+  offlineJavadocPackages platform(interlokCatalogPlatform)
+  offlineJavadocPackages ("com.adaptris:interlok-core:javadoc@jar") { changing= true}
+  offlineJavadocPackages ("com.adaptris:interlok-common:javadoc@jar") { changing= true}
 
 }
 
