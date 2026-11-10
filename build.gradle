@@ -170,8 +170,8 @@ dependencies {
   javadoc("com.adaptris:interlok-core-apt") { changing= true}
 
   offlineJavadocPackages platform(interlokCatalogPlatform)
-  offlineJavadocPackages ("com.adaptris:interlok-core:javadoc@jar") { changing= true}
-  offlineJavadocPackages ("com.adaptris:interlok-common:javadoc@jar") { changing= true}
+  offlineJavadocPackages ("com.adaptris:interlok-core::javadoc@jar") { changing= true}
+  offlineJavadocPackages ("com.adaptris:interlok-common::javadoc@jar") { changing= true}
 
 }
 
