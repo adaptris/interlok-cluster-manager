@@ -67,8 +67,8 @@ ext.hasGraphViz = { ->
   }
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = JavaVersion.VERSION_21
+targetCompatibility = JavaVersion.VERSION_21
 group   = 'com.adaptris'
 version = releaseVersion
 def versionDir = "$buildDir/version"
@@ -277,12 +277,12 @@ jacocoTestReport {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-  classifier = 'javadoc'
+  archiveClassifier = 'javadoc'
   from javadoc.destinationDir
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
+    archiveClassifier = 'sources'
     from sourceSets.main.extensions.delombokTask
 }
 
@@ -296,8 +296,8 @@ publishing {
     mavenJava(MavenPublication) {
       from components.java
 
-      artifact javadocJar { classifier "javadoc" }
-      artifact sourcesJar { classifier "sources" }
+      artifact javadocJar
+      artifact sourcesJar
 
       pom.withXml {
         asNode().appendNode("name", componentName)
